@@ -18,7 +18,7 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.static("public"));
 
 
-mongoose.connect("mongodb://localhost:27017/blogDB", {useNewUrlParser: true});
+mongoose.connect("mongodb+srv://ad3rinto:akin@cluster0.vdlpgxh.mongodb.net/?retryWrites=true&w=majority/blogDB");
 
 const blogSchema = {
   title: String,
@@ -30,7 +30,6 @@ const Blog = mongoose.model("Blog", blogSchema);
 
 app.get("/", function(req, res){
   Blog.find({}, function(err, foundPosts){
-    console.log(foundPosts);
     res.render("home", {
       startingContent: foundPosts
       
@@ -51,19 +50,23 @@ app.get("/compose", function(req, res){
   res.render("compose");
 });
 
+
 app.post("/compose", function(req, res){
   const blog = new Blog({
     title: req.body.postTitle,
     content: req.body.postBody
   });
 
-  blog.save(function(err){
+  blog.save( function(err){
     if(!err){
-      res.redirect("/");
+      res.redirect("/"); 
     }
   });
-
+ 
 });
+
+
+
 
 app.get("/posts/:postName", function(req, res){
   Blog.find({}, function(err, foundPosts){
@@ -81,6 +84,9 @@ app.get("/posts/:postName", function(req, res){
   });
   });
 });
+
+
+
 
 app.listen(3000, function() {
   console.log("Server started on port 3000");
